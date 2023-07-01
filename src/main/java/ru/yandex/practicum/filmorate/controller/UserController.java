@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public User updateUser(@RequestBody @Valid final User user) throws ValidationException{
+    public User updateUser(@RequestBody @Valid final User user) throws ValidationException {
         try {
             validateUser(user);
         } catch (ValidationException ex) {
