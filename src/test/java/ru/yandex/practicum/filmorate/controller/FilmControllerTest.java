@@ -12,10 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FilmControllerTest {
 
     private FilmController filmController;
+
     @BeforeEach
     public void initController() {
         filmController = new FilmController();
     }
+
     @Test
     public void shouldCreateUserWithCorrectData() {
         Film film = Film

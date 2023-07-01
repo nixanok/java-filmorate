@@ -14,10 +14,12 @@ import java.time.LocalDate;
 public class UserControllerTest {
 
     private UserController userController;
+
     @BeforeEach
     public void initController() {
         userController = new UserController();
     }
+
     @Test
     public void shouldCreateUserWithCorrectData() {
         User user = User
