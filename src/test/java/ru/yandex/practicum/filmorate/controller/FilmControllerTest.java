@@ -74,7 +74,7 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmDurationIsNegativeOrZero() throws Exception {
-        Film film1= Film
+        Film film1 = Film
                 .builder()
                 .name("name")
                 .description("description")
