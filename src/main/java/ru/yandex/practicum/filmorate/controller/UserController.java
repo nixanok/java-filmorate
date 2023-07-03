@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody @Valid final User user) {
-        try{
+        try {
             validateUser(user);
         } catch (ValidationException ex) {
             ResponseError error = ResponseError
@@ -46,7 +46,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody @Valid final User user) {
-        try{
+        try {
             validateUser(user);
         } catch (ValidationException ex) {
             ResponseError error = ResponseError

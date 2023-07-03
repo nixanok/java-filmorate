@@ -24,7 +24,7 @@ public class FilmController {
 
     @PostMapping
     public ResponseEntity<?> createFilm(@RequestBody @Valid final Film film) {
-        try{
+        try {
             validateFilm(film);
         } catch (ValidationException ex) {
             ResponseError error = ResponseError
@@ -45,7 +45,7 @@ public class FilmController {
 
     @PutMapping
     public ResponseEntity<?> updateFilm(@RequestBody @Valid final Film film) {
-        try{
+        try {
             validateFilm(film);
         } catch (ValidationException ex) {
             ResponseError error = ResponseError
