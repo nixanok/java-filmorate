@@ -3,27 +3,23 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
 @Builder(toBuilder = true)
 public class User {
-    int id;
+    private int id;
 
-    @NotNull(message = "login cannot be null")
     @NotBlank(message = "login cannot be blank")
-    String login;
+    private String login;
 
-    String name;
+    private String name;
 
-    @NotNull
     @Email(message = "Email should be valid")
-    String email;
+    @NotBlank(message = "Email cannot be blank")
+    private String email;
 
     @Past(message = "birthday should be in the past")
-    final LocalDate birthday;
+    private final LocalDate birthday;
 }
