@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -29,6 +30,7 @@ public class FilmControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("Adding correct film.")
     public void shouldNotCreateFilmWithoutName() throws Exception {
         Film film1 = Film
                 .builder()
@@ -50,6 +52,7 @@ public class FilmControllerTest {
     }
 
     @Test
+    @DisplayName("Creating film with description length > 200.")
     public void shouldNotCreateFilmWithDescriptionMoreThan200() throws Exception {
         Film film = Film
                 .builder()
@@ -61,7 +64,8 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void shouldNotCreateFilmWhenDateBefore1895_28_01() throws Exception {
+    @DisplayName("Creating film with data before 28.01.1895.")
+    public void shouldNotCreateFilmWhenDateBefore28_01_1895() throws Exception {
         Film film = Film
                 .builder()
                 .name("name")
@@ -73,6 +77,7 @@ public class FilmControllerTest {
     }
 
     @Test
+    @DisplayName("Creating film with negative duration.")
     public void shouldNotCreateFilmDurationIsNegativeOrZero() throws Exception {
         Film film1 = Film
                 .builder()

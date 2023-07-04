@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +32,7 @@ public class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("Creating user with incorrect email.")
     public void shouldNotCreateUserWithIncorrectEmail() throws Exception {
         User user1 = User
                 .builder()
@@ -53,6 +55,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Creating user with incorrect login.")
     public void shouldNotCreateUserWithIncorrectLogin() throws Exception {
         User user1 = User
                 .builder()
@@ -75,6 +78,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Creating user with birthday in future.")
     public void shouldNotCreateUserWithBirthdayInFuture() throws Exception {
         User user = User
                 .builder()
@@ -88,6 +92,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Creating user with empty and null login.")
     public void shouldNameIsLoginWhenNameIsEmptyOrNull() throws Exception {
         User user1 = User
                 .builder()
@@ -119,28 +124,6 @@ public class UserControllerTest {
                 .andReturn();
 
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-    }
-
-    @Test
-    public void shouldNotCreateFilmDurationIsNegativeOrZero() throws Exception {
-        User user1 = User
-                .builder()
-                .email("myEmail_gmail.com")
-                .login("login")
-                .name("name")
-                .birthday(LocalDate.of(2001, 9, 24))
-                .build();
-
-        User user2 = User
-                .builder()
-                .email("myEmail_gmail.com")
-                .login("login")
-                .name("name")
-                .birthday(LocalDate.of(2001, 9, 24))
-                .build();
-
-        pushUserAndExpect4xxCode(user1);
-        pushUserAndExpect4xxCode(user2);
     }
 
     private void pushUserAndExpect4xxCode(User user) throws Exception {

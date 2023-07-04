@@ -63,7 +63,7 @@ public class FilmController {
             ResponseError error = ResponseError
                     .builder()
                     .timestamp(LocalDateTime.now())
-                    .status(500)
+                    .status(404)
                     .error("Bad Request")
                     .path("/films")
                     .build();

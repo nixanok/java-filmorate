@@ -11,14 +11,14 @@ import java.time.LocalDate;
 public class Film {
     private int id;
 
-    @NotBlank(message = "name cannot be blank")
+    @NotBlank(message = "Name cannot be blank.")
     private final String name;
 
-    @NotNull(message = "description cannot be null")
-    @Size(max = 200, message = "maximum description length - 200 characters")
+    @NotNull(message = "Description cannot be null.")
+    @Size(max = 200, message = "Maximum description length - 200 characters.")
     private final String description;
 
-    @NotNull(message = "releaseDate cannot be null")
+    @NotNull(message = "ReleaseDate cannot be null.")
     private final LocalDate releaseDate;
 
     @Positive(message = "Duration should be positive.")
