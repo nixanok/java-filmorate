@@ -13,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = CorrectFilmDateValidator.class)
 @Documented
-public @interface CorrectFilmDate{
+public @interface CorrectFilmDate {
 
     String message() default "{ru.yandex.practicum.filmorate.model.annotation.CorrectFilmDate.message}";
 

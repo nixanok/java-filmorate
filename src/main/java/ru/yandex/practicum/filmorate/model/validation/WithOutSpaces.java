@@ -13,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = WithOutSpacesValidator.class)
 @Documented
-public @interface WithOutSpaces{
+public @interface WithOutSpaces {
 
     String message() default "{ru.yandex.practicum.filmorate.model.annotation.WithOutSpaces.message}";
 
