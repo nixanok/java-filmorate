@@ -7,8 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public final class ErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<ErrorResponse> handleValidationError(final MethodArgumentNotValidException e) {
+    public List<ErrorResponse> handleValidationDataError(final MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         List<ErrorResponse> errorResponses = new ArrayList<>();
         for (FieldError fieldError : fieldErrors) {
@@ -36,10 +35,24 @@ public final class ErrorHandler {
         return errorResponses;
     }
 
-    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class})
+    @ExceptionHandler(NoValidIdException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleNoValidIdError(final NoValidIdException e) {
+        log.warn(e.getMessage());
+        return new ErrorResponse("BAD_REQUEST", 404, e.getMessage(), LocalDateTime.now().withNano(0));
+    }
+
+    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class, UserLikeNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundError(final RuntimeException e) {
         log.warn(e.getMessage());
-        return new ErrorResponse("Not Found", 404, e.getMessage(), LocalDateTime.now().withNano(0));
+        return new ErrorResponse("NOT_FOUND", 404, e.getMessage(), LocalDateTime.now().withNano(0));
+    }
+
+    @ExceptionHandler({FilmAlreadyExistException.class, UserAlreadyExistException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleAlreadyExistError(final RuntimeException e) {
+        log.warn(e.getMessage());
+        return new ErrorResponse("CONFLICT", 409, e.getMessage(), LocalDateTime.now().withNano(0));
     }
 }

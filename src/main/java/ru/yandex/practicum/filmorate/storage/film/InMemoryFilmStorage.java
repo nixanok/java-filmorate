@@ -16,29 +16,32 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void add(Film film) {
         if (films.containsKey(film.getId())) {
-            throw new FilmAlreadyExistException();
+            throw new FilmAlreadyExistException(film.getId());
         }
         film.setId(nextId++);
         films.put(film.getId(), film);
     }
 
     @Override
-    public Film update(Film film) {
+    public void update(Film film) {
         if (!films.containsKey(film.getId()))
             throw new FilmNotFoundException(film.getId());
-        return films.put(film.getId(), film);
+        films.put(film.getId(), film);
     }
 
     @Override
     public Film put(Film film) {
         if (film.getId() <= 0) {
-            throw new NoValidIdException();
+            throw new NoValidIdException(film.getId());
         }
         return films.put(film.getId(), film);
     }
 
     @Override
     public Film get(int id) {
+        if (!films.containsKey(id)) {
+            throw  new FilmNotFoundException(id);
+        }
         return films.get(id);
     }
 
@@ -54,6 +57,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void delete(int id) {
+        if (!films.containsKey(id)) {
+            throw  new FilmNotFoundException(id);
+        }
         films.remove(id);
     }
 
