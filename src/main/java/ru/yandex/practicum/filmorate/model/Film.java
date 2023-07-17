@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.exception.NoValidIdException;
 import ru.yandex.practicum.filmorate.exception.UserLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.validation.CorrectFilmDate;
 
@@ -31,9 +33,13 @@ public class Film {
     @Positive(message = "Duration should be positive.")
     private final long duration;
 
+    @JsonIgnore
     private final Set<Integer> userLikes = new HashSet<>();
 
     public void addUserLike(int id) {
+        if (id <= 0) {
+            throw new NoValidIdException(id);
+        }
         userLikes.add(id);
     }
 

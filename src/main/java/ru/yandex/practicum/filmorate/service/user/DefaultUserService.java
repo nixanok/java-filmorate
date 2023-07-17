@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public final class UserService {
-
+public final class DefaultUserService implements UserService {
     @Autowired
     private final UserStorage userStorage;
 
+    @Override
     public User createUser(final User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
@@ -29,24 +29,31 @@ public final class UserService {
         return user;
     }
 
+    @Override
     public User updateUser(final User user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
         userStorage.update(user);
         log.info("User updated successfully. {}", user);
         return user;
     }
 
+    @Override
     public List<User> getUsers() {
         List<User> users = userStorage.getAll();
         log.info("Getting users. Size = {}", users.size());
         return users;
     }
 
+    @Override
     public User getUser(int id) {
         User user = userStorage.get(id);
         log.info("Getting user. Id = {}", id);
         return user;
     }
 
+    @Override
     public void addFriends(int firstId, int secondId) {
         User firstUser = userStorage.get(firstId);
         User secondUser = userStorage.get(secondId);
@@ -55,6 +62,7 @@ public final class UserService {
         log.info("Adding friends. First id = {}. Second id = {}", firstId, secondId);
     }
 
+    @Override
     public void removeFriends(int firstId, int secondId) {
         User firstUser = userStorage.get(firstId);
         User secondUser = userStorage.get(secondId);
@@ -63,6 +71,7 @@ public final class UserService {
         log.info("Removing friends. First id = {}. Second id = {}", firstId, secondId);
     }
 
+    @Override
     public List<User> getFriends(int id) {
         User user = userStorage.get(id);
         List<User> friends = user.getFriends()
@@ -73,6 +82,7 @@ public final class UserService {
         return friends;
     }
 
+    @Override
     public List<User> getCommonFriends(int firstId, int secondId) {
         Set<Integer> friendsIdFirst = userStorage.get(firstId).getFriends();
         Set<Integer> secondsIdSecond = userStorage.get(secondId).getFriends();
@@ -87,5 +97,4 @@ public final class UserService {
         log.info("Getting common friends of id = {} and id = {}. Size = {}", firstId, secondId, friends.size());
         return friends;
     }
-
 }
