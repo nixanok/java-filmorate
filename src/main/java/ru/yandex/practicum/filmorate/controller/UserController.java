@@ -1,91 +1,71 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import ru.yandex.practicum.filmorate.controller.responseError.ResponseError;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 @Slf4j
-public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
-    private int nextId = 1;
+public final class UserController {
+
+    @Autowired
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody @Valid final User user) {
-        try {
-            validateUser(user);
-        } catch (ValidationException ex) {
-            ResponseError error = ResponseError
-                    .builder()
-                    .timestamp(LocalDateTime.now())
-                    .status(400)
-                    .error("Bad Request")
-                    .path("/users")
-                    .build();
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
-
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        user.setId(nextId++);
-        users.put(user.getId(), user);
-        log.info("User successfully created. {}", user);
-        return new ResponseEntity<>(user.toBuilder().build(), HttpStatus.OK);
+    public User createUser(@RequestBody @Valid final User user) {
+        log.debug("Request \"createUser\"is called");
+        return userService.createUser(user);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@RequestBody @Valid final User user) {
-        try {
-            validateUser(user);
-        } catch (ValidationException ex) {
-            ResponseError error = ResponseError
-                    .builder()
-                    .timestamp(LocalDateTime.now())
-                    .status(400)
-                    .error("Bad Request")
-                    .path("/users")
-                    .build();
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
-
-        if (!users.containsKey(user.getId())) {
-            log.warn("No user with this id. id = {}", user.getId());
-            ResponseError error = ResponseError
-                    .builder()
-                    .timestamp(LocalDateTime.now())
-                    .status(500)
-                    .error("Bad Request")
-                    .path("/users")
-                    .build();
-            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-        }
-
-        users.put(user.getId(), user);
-        log.info("User successfully put. {}", user);
-        return new ResponseEntity<>(user.toBuilder().build(), HttpStatus.OK);
+    public User updateUser(@RequestBody @Valid final User user) {
+        log.debug("Request \"updateUser\"is called");
+        return userService.updateUser(user);
     }
 
     @GetMapping
-    public ArrayList<User> getUsers() {
-        log.info("Getting users. Size = {}", users.size());
-        return new ArrayList<>(users.values());
+    public List<User> getUsers() {
+        log.debug("Request \"getUsers\"is called");
+        return userService.getUsers();
     }
 
-    private void validateUser(final User user) {
-        if (user.getLogin().contains(" ")) {
-            log.warn("Login cannot have spaces.");
-            throw new ValidationException("Login cannot have spaces.");
-        }
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable int id) {
+        log.debug("Request \"getUser\"is called");
+        return userService.getUser(id);
     }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriends(@PathVariable int id, @PathVariable int friendId) {
+        log.debug("Request \"addFriends\"is called");
+        userService.addFriends(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriends(@PathVariable int id, @PathVariable int friendId) {
+        log.debug("Request \"removeFriends\"is called");
+        userService.removeFriends(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriends(@PathVariable int id) {
+        log.debug("Request \"getFriends\"is called");
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        log.debug("Request \"getCommonFriends\"is called");
+        return userService.getCommonFriends(id, otherId);
+    }
+
 }
