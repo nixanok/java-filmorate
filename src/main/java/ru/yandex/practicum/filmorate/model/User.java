@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.exception.FriendAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.NoValidIdException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
+import ru.yandex.practicum.filmorate.exception.FriendRequestNotFoundException;
 import ru.yandex.practicum.filmorate.model.validation.WithOutSpaces;
 
 import javax.validation.constraints.*;
@@ -33,16 +35,35 @@ public class User {
     @JsonIgnore
     private final Set<Integer> friends = new HashSet<>();
 
-    public void addFriend(int id) {
+    @JsonIgnore
+    private final Set<Integer> requestFriends = new HashSet<>();
+
+    public void addRequestFriend(int id) {
         if (id <= 0) {
             throw new NoValidIdException(id);
         }
+        if (requestFriends.contains(id)) {
+            throw new FriendAlreadyExistException(id);
+        }
+        requestFriends.add(id);
+    }
+
+    public boolean isHasRequest(int id) {
+        return requestFriends.contains(id);
+    }
+
+    public void confirmRequestFriend(int id) {
+        if (!isHasRequest(id)) {
+            throw new FriendRequestNotFoundException(id);
+        }
+        requestFriends.remove(id);
         friends.add(id);
     }
 
+
     public void removeFriend(int id) {
         if (!friends.contains(id)) {
-            throw new UserNotFoundException(id);
+            throw new FriendNotFoundException(id);
         }
         friends.remove(id);
     }

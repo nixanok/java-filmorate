@@ -26,12 +26,17 @@ public class Film {
     @Size(max = 200, message = "Maximum description length - 200 characters.")
     private final String description;
 
+    public enum Genre { COMEDY, DRAMA, CARTOON, THRILLER, DOCUMENTARY, ACTION };
+    private final Genre genre;
+
     @NotNull(message = "ReleaseDate cannot be null.")
     @CorrectFilmDate(message = "ReleaseDate cannot be before 1895.12.28.")
     private final LocalDate releaseDate;
 
     @Positive(message = "Duration should be positive.")
     private final long duration;
+
+    private final MPA mpa;
 
     @JsonIgnore
     private final Set<Integer> userLikes = new HashSet<>();

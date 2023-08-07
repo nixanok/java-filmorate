@@ -54,12 +54,18 @@ public final class DefaultUserService implements UserService {
     }
 
     @Override
-    public void addFriends(int firstId, int secondId) {
-        User firstUser = userStorage.get(firstId);
-        User secondUser = userStorage.get(secondId);
-        firstUser.addFriend(secondId);
-        secondUser.addFriend(firstId);
-        log.info("Adding friends. First id = {}. Second id = {}", firstId, secondId);
+    public void addFriends(int sendingId, int receivingId) {
+        final User sendingUser = userStorage.get(sendingId);
+        final User receivingUser = userStorage.get(receivingId);
+        if (sendingUser.isHasRequest(receivingId)) {
+            sendingUser.confirmRequestFriend(receivingId);
+            receivingUser.addRequestFriend(sendingId);
+            receivingUser.confirmRequestFriend(sendingId);
+        }
+        else {
+            receivingUser.addRequestFriend(sendingId);
+        }
+        log.info("Adding friends. Sending id = {}. Receiving id = {}", sendingId, receivingId);
     }
 
     @Override
