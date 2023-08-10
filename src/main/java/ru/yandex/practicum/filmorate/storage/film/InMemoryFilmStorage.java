@@ -1,25 +1,27 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.NoValidIdException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 
 import java.util.*;
 
 @Component
+@Qualifier("InMemory")
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
     private int nextId = 1;
 
     @Override
-    public void add(Film film) {
+    public Film add(Film film) {
         if (films.containsKey(film.getId())) {
             throw new FilmAlreadyExistException(film.getId());
         }
         film.setId(nextId++);
         films.put(film.getId(), film);
+        return film;
     }
 
     @Override
@@ -27,14 +29,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (!films.containsKey(film.getId()))
             throw new FilmNotFoundException(film.getId());
         films.put(film.getId(), film);
-    }
-
-    @Override
-    public Film put(Film film) {
-        if (film.getId() <= 0) {
-            throw new NoValidIdException(film.getId());
-        }
-        return films.put(film.getId(), film);
     }
 
     @Override
@@ -51,21 +45,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public boolean contains(int id) {
-        return films.containsKey(id);
-    }
-
-    @Override
     public void delete(int id) {
         if (!films.containsKey(id)) {
             throw new FilmNotFoundException(id);
         }
         films.remove(id);
-    }
-
-    @Override
-    public void deleteAll() {
-        films.clear();
-        nextId = 0;
     }
 }

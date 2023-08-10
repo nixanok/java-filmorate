@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.NoValidIdException;
 import ru.yandex.practicum.filmorate.exception.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -17,12 +16,13 @@ public class InMemoryUserStorage implements UserStorage {
     private int nextId = 1;
 
     @Override
-    public void add(User user) {
+    public User add(User user) {
         if (users.containsKey(user.getId())) {
             throw new UserAlreadyExistException(user.getId());
         }
         user.setId(nextId++);
         users.put(user.getId(), user);
+        return user;
     }
 
     @Override
@@ -30,14 +30,6 @@ public class InMemoryUserStorage implements UserStorage {
         if (!users.containsKey(user.getId()))
             throw new UserNotFoundException(user.getId());
         users.put(user.getId(), user);
-    }
-
-    @Override
-    public User put(User user) {
-        if (user.getId() <= 0) {
-            throw new NoValidIdException(user.getId());
-        }
-        return users.put(user.getId(), user);
     }
 
     @Override
@@ -53,20 +45,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public boolean contains(int id) {
-        return users.containsKey(id);
-    }
-
-    @Override
     public void delete(int id) {
         if (!users.containsKey(id))
             throw new UserNotFoundException(id);
         users.remove(id);
-    }
-
-    @Override
-    public void deleteAll() {
-        users.clear();
-        nextId = 0;
     }
 }

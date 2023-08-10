@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 
 import java.time.LocalDate;
 
@@ -46,6 +46,8 @@ public class FilmControllerTest {
                 .releaseDate(LocalDate.of(2000, 1, 1))
                 .duration(123)
                 .build();
+
+
 
         pushFilmAndExpect4xxCode(film1);
         pushFilmAndExpect4xxCode(film2);

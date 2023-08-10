@@ -1,8 +1,11 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+
+import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
+import ru.yandex.practicum.filmorate.exception.NoValidGenreException;
 import ru.yandex.practicum.filmorate.exception.NoValidIdException;
 import ru.yandex.practicum.filmorate.exception.UserLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.validation.CorrectFilmDate;
@@ -26,9 +29,6 @@ public class Film {
     @Size(max = 200, message = "Maximum description length - 200 characters.")
     private final String description;
 
-    public enum Genre { COMEDY, DRAMA, CARTOON, THRILLER, DOCUMENTARY, ACTION };
-    private final Genre genre;
-
     @NotNull(message = "ReleaseDate cannot be null.")
     @CorrectFilmDate(message = "ReleaseDate cannot be before 1895.12.28.")
     private final LocalDate releaseDate;
@@ -38,21 +38,41 @@ public class Film {
 
     private final MPA mpa;
 
-    @JsonIgnore
-    private final Set<Integer> userLikes = new HashSet<>();
+    private final Set<Genre> genres = new HashSet<>();
 
-    public void addUserLike(int id) {
+    @JsonIgnore
+    private final Set<Long> userLikes = new HashSet<>();
+
+    public void addUserLike(long id) {
         if (id <= 0) {
             throw new NoValidIdException(id);
         }
         userLikes.add(id);
     }
 
-    public void removeUserLike(int id) {
+    public void removeUserLike(long id) {
         if (!userLikes.contains(id)) {
             throw new UserLikeNotFoundException(this.id, id);
         }
         userLikes.remove(id);
+    }
+
+    public void addGenre(Genre genre) {
+        if (genre.getId() <= 0) {
+            throw new NoValidGenreException(genre.getId());
+        }
+        genres.add(genre);
+    }
+
+    public void addGenres(Set<Genre> genres) {
+        this.genres.addAll(genres);
+    }
+
+    public void removeGenre(Genre genre) {
+        if (!genres.contains(genre)) {
+            throw new GenreNotFoundException(genre.getId());
+        }
+        genres.remove(genre);
     }
 
     public int getCountLikes() {
