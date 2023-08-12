@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model.film;
+package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
@@ -19,7 +19,6 @@ import java.util.Set;
 @Builder(toBuilder = true)
 public class Film {
     public static final LocalDate DATE_OF_FIRST_FILM = LocalDate.of(1895, 12, 28);
-
     private int id;
 
     @NotBlank(message = "Name cannot be blank.")
@@ -36,21 +35,21 @@ public class Film {
     @Positive(message = "Duration should be positive.")
     private final long duration;
 
-    private final MPA mpa;
+    private final Mpa mpa;
 
-    private final Set<Genre> genres = new HashSet<>();
+    private Set<Genre> genres;
 
     @JsonIgnore
-    private final Set<Long> userLikes = new HashSet<>();
+    private final Set<Integer> userLikes = new HashSet<>();
 
-    public void addUserLike(long id) {
+    public void addUserLike(int id) {
         if (id <= 0) {
             throw new NoValidIdException(id);
         }
         userLikes.add(id);
     }
 
-    public void removeUserLike(long id) {
+    public void removeUserLike(int id) {
         if (!userLikes.contains(id)) {
             throw new UserLikeNotFoundException(this.id, id);
         }
@@ -58,14 +57,17 @@ public class Film {
     }
 
     public void addGenre(Genre genre) {
+        initGenres();
         if (genre.getId() <= 0) {
             throw new NoValidGenreException(genre.getId());
         }
         genres.add(genre);
     }
 
-    public void addGenres(Set<Genre> genres) {
-        this.genres.addAll(genres);
+    public void initGenres() {
+        if (genres == null) {
+            genres = new HashSet<>();
+        }
     }
 
     public void removeGenre(Genre genre) {

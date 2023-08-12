@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.Comparator;
@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public final class DefaultFilmService implements FilmService {
+
     @Autowired
     private final FilmStorage filmStorage;
 
@@ -59,13 +60,17 @@ public final class DefaultFilmService implements FilmService {
 
     @Override
     public void addLike(int filmId, int userId) {
-        filmStorage.get(filmId).addUserLike(userId);
+        Film film = filmStorage.get(filmId);
+        film.addUserLike(userId);
+        filmStorage.update(film);
         log.info("Like on film with id = {} by user with id = {} added.", filmId, userId);
     }
 
     @Override
     public void removeLike(int filmId, int userId) {
-        filmStorage.get(filmId).removeUserLike(userId);
+        Film film = filmStorage.get(filmId);
+        film.removeUserLike(userId);
+        filmStorage.update(film);
         log.info("Like on film with id = {} by user with id = {} removed.", filmId, userId);
     }
 }

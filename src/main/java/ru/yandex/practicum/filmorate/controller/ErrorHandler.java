@@ -43,14 +43,21 @@ public final class ErrorHandler {
         return new ErrorResponse("BAD_REQUEST", 404, e.getMessage(), LocalDateTime.now().withNano(0));
     }
 
-    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class, UserLikeNotFoundException.class})
+    @ExceptionHandler({FilmNotFoundException.class,
+            UserNotFoundException.class,
+            UserLikeNotFoundException.class,
+            FriendNotFoundException.class,
+            GenreNotFoundException.class,
+            MpaNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundError(final RuntimeException e) {
         log.warn(e.getMessage());
         return new ErrorResponse("NOT_FOUND", 404, e.getMessage(), LocalDateTime.now().withNano(0));
     }
 
-    @ExceptionHandler({FilmAlreadyExistException.class, UserAlreadyExistException.class})
+    @ExceptionHandler({FilmAlreadyExistException.class,
+            UserAlreadyExistException.class,
+            FriendAlreadyExistException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleAlreadyExistError(final RuntimeException e) {
         log.warn(e.getMessage());

@@ -57,23 +57,16 @@ public final class DefaultUserService implements UserService {
     public void addFriends(int sendingId, int receivingId) {
         final User sendingUser = userStorage.get(sendingId);
         final User receivingUser = userStorage.get(receivingId);
-        if (sendingUser.isHasRequest(receivingId)) {
-            sendingUser.confirmRequestFriend(receivingId);
-            receivingUser.addRequestFriend(sendingId);
-            receivingUser.confirmRequestFriend(sendingId);
-        }
-        else {
-            receivingUser.addRequestFriend(sendingId);
-        }
+        sendingUser.addFriend(receivingUser.getId());
+        userStorage.update(sendingUser);
         log.info("Adding friends. Sending id = {}. Receiving id = {}", sendingId, receivingId);
     }
 
     @Override
     public void removeFriends(int firstId, int secondId) {
         User firstUser = userStorage.get(firstId);
-        User secondUser = userStorage.get(secondId);
         firstUser.removeFriend(secondId);
-        secondUser.removeFriend(firstId);
+        userStorage.update(firstUser);
         log.info("Removing friends. First id = {}. Second id = {}", firstId, secondId);
     }
 

@@ -1,15 +1,14 @@
-package ru.yandex.practicum.filmorate.model.film;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 
 @Data
-public class MPA {
-
+public class Mpa {
     private int id;
 
-    public MPA() {}
+    public Mpa() {}
 
-    public MPA(int id) {
+    public Mpa(int id) {
         this.id = id;
     }
 
@@ -24,7 +23,7 @@ public class MPA {
             case 4:
                 return "R";
             case 5:
-                return "NC_17";
+                return "NC-17";
             default:
                 throw new IllegalArgumentException();
         }

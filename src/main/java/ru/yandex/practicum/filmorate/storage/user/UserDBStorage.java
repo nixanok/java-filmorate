@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,24 +12,18 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 @Primary
 public class UserDBStorage implements  UserStorage {
-    private final JdbcTemplate jdbcTemplate;
-
     @Autowired
-    public UserDBStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public User add(User user) {
-        String sqlQueryUser = "INSERT INTO users (login, name, email, birthday) " +
-                "VALUES (?, ?, ?, ?)";
+        String sqlQueryUser = "INSERT INTO users (login, name, email, birthday) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryUser, new String[]{"user_id"});
@@ -44,13 +39,11 @@ public class UserDBStorage implements  UserStorage {
 
     @Override
     public void update(User user) {
-        String sqlQuery = "SELECT user_id FROM users WHERE user_id = ?";
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlQuery, user.getId());
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet("SELECT user_id FROM users WHERE user_id = ?", user.getId());
         if (!userRows.next()) {
             throw new UserNotFoundException(user.getId());
         }
-        String sqlQueryForUpdate = "UPDATE users SET login = ?, name = ?, email = ?, birthday = ?" +
-                "WHERE user_id = ?";
+        String sqlQueryForUpdate = "UPDATE users SET login = ?, name = ?, email = ?, birthday = ? WHERE user_id = ?";
         jdbcTemplate.update(sqlQueryForUpdate,
                 user.getLogin(),
                 user.getName(),
@@ -58,23 +51,33 @@ public class UserDBStorage implements  UserStorage {
                 user.getBirthday(),
                 user.getId()
         );
+        jdbcTemplate.update("DELETE FROM friends WHERE first_id = ?", user.getId());
+        for (Integer idFriend : user.getFriends())
+            jdbcTemplate.update("INSERT INTO friends (first_id, second_id) VALUES (?, ?)", user.getId(), idFriend);
     }
 
     @Override
     public User get(int id) {
         String sqlQuery = "SELECT * FROM users WHERE user_id = ?";
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
-        if (userRows.next()) {
-            return User.builder()
+        if (!userRows.next()) {
+            throw new UserNotFoundException(id);
+        }
+        User user = User.builder()
                     .id(userRows.getInt("user_id"))
                     .login(userRows.getString("login"))
                     .name(userRows.getString("name"))
                     .email(userRows.getString("email"))
                     .birthday(userRows.getDate("birthday").toLocalDate())
                     .build();
-        } else {
-            throw new UserNotFoundException(id);
+
+        String sqlQueryFriends = "SELECT second_id FROM friends WHERE first_id = ?";
+        SqlRowSet friendsRows = jdbcTemplate.queryForRowSet(sqlQueryFriends, id);
+        while (friendsRows.next()) {
+            int friendId = friendsRows.getInt("second_id");
+            user.addFriend(friendId);
         }
+        return user;
     }
 
     @Override
