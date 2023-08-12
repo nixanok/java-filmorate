@@ -6,7 +6,9 @@ import lombok.Data;
 public class Mpa {
     private int id;
 
-    public Mpa() {}
+    public Mpa() {
+
+    }
 
     public Mpa(int id) {
         this.id = id;

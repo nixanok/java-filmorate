@@ -6,7 +6,9 @@ import lombok.Data;
 public class Genre {
     private int id;
 
-    public Genre() {}
+    public Genre() {
+
+    }
 
     public Genre(int id) {
         this.id = id;
