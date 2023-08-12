@@ -89,7 +89,7 @@ public class FilmDBStorage implements FilmStorage {
                 .duration(filmRows.getLong("duration"))
                 .mpa(new Mpa(filmRows.getInt("mpa_id")))
                 .build();
-        for(Genre genre : getGenres(id)) {
+        for (Genre genre : getGenres(id)) {
             film.addGenre(genre);
         }
         film.initGenres();

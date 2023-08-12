@@ -35,7 +35,7 @@ public class MpaDBStorage implements MpaStorage {
         String sqlQuery = "SELECT * FROM mpa";
         SqlRowSet rows = jdbcTemplate.queryForRowSet(sqlQuery);
         List<Mpa> allMpa = new ArrayList<>();
-        while(rows.next()) {
+        while (rows.next()) {
             Mpa mpa = new Mpa(rows.getInt("mpa_id"));
             allMpa.add(mpa);
         }
