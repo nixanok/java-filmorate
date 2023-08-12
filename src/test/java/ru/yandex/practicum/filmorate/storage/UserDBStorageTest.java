@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserDBStorage;
@@ -21,7 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserDBStorageTest {
     private final UserDBStorage userStorage;
+
     @Test
+    @Sql({"/initTables.sql"})
     public void testCrateAndGetUser() {
         User user = User
                 .builder()
@@ -35,6 +38,7 @@ public class UserDBStorageTest {
     }
 
     @Test
+    @Sql({"/initTables.sql"})
     public void testUpdateUser() {
         User user = User
                 .builder()
@@ -51,6 +55,7 @@ public class UserDBStorageTest {
     }
 
     @Test
+    @Sql({"/initTables.sql"})
     public void testGetAllUsers() {
         List<User> users = new ArrayList<>();
         User user = User
@@ -75,6 +80,7 @@ public class UserDBStorageTest {
     }
 
     @Test
+    @Sql({"/initTables.sql"})
     public void testDeleteUser() {
         User user = User
                 .builder()
