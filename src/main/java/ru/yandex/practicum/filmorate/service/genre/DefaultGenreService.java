@@ -12,10 +12,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DefaultGenreService implements  GenreService {
+public class DefaultGenreService implements GenreService {
 
     @Autowired
-    final private GenreStorage genreStorage;
+    private final GenreStorage genreStorage;
 
     @Override
     public Genre get(int id) {
