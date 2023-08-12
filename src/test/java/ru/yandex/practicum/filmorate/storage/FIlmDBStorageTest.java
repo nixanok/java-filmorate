@@ -26,7 +26,7 @@ public class FIlmDBStorageTest {
     private final FilmDBStorage filmDBStorage;
 
     @Test
-    @Sql({"/initTables.sql"})
+    @Sql({"/schema.sql"})
     public void testCrateAndGetFilm() {
         Film film = Film
                 .builder()
@@ -42,7 +42,7 @@ public class FIlmDBStorageTest {
     }
 
     @Test
-    @Sql({"/initTables.sql"})
+    @Sql({"/schema.sql"})
     public void testUpdateFilm() {
         Film film = Film
                 .builder()
@@ -69,7 +69,7 @@ public class FIlmDBStorageTest {
     }
 
     @Test
-    @Sql({"/initTables.sql"})
+    @Sql({"/schema.sql"})
     public void testGetAllFilms() {
         List<Film> films = new ArrayList<>();
         Film film = Film
@@ -98,7 +98,7 @@ public class FIlmDBStorageTest {
     }
 
     @Test
-    @Sql({"/initTables.sql"})
+    @Sql({"/schema.sql"})
     public void testDeleteFilm() {
         Film film = Film
                 .builder()
