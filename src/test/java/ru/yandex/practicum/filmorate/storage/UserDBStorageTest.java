@@ -24,7 +24,7 @@ public class UserDBStorageTest {
     private final UserDBStorage userStorage;
 
     @Test
-    @Sql({"/schema.sql"})
+    @Sql({"/initTable.sql"})
     public void testCrateAndGetUser() {
         User user = User
                 .builder()
@@ -38,7 +38,7 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql"})
+    @Sql({"/initTable.sql"})
     public void testUpdateUser() {
         User user = User
                 .builder()
@@ -55,7 +55,7 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql"})
+    @Sql({"/initTable.sql"})
     public void testGetAllUsers() {
         List<User> users = new ArrayList<>();
         User user = User
@@ -80,7 +80,7 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql"})
+    @Sql({"/initTable.sql"})
     public void testDeleteUser() {
         User user = User
                 .builder()
