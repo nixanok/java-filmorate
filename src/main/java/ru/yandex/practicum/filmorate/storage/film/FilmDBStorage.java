@@ -68,7 +68,7 @@ public class FilmDBStorage implements FilmStorage {
         if (!contains(id)) {
             throw new FilmNotFoundException(id);
         }
-        String queryFilm= "SELECT * FROM films WHERE film_id = ?";
+        String queryFilm = "SELECT * FROM films WHERE film_id = ?";
         Film film = jdbcTemplate.queryForObject(queryFilm, this::mapRowToFilm, id);
         film.initGenres();
         for (Genre genre : getGenres(id)) {
