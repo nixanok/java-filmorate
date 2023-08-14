@@ -1,18 +1,17 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
 import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
 import ru.yandex.practicum.filmorate.exception.NoValidGenreException;
-import ru.yandex.practicum.filmorate.exception.NoValidIdException;
-import ru.yandex.practicum.filmorate.exception.UserLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.validation.CorrectFilmDate;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -39,23 +38,6 @@ public class Film {
 
     private Set<Genre> genres;
 
-    @JsonIgnore
-    private final Set<Integer> userLikes = new HashSet<>();
-
-    public void addUserLike(int id) {
-        if (id <= 0) {
-            throw new NoValidIdException(id);
-        }
-        userLikes.add(id);
-    }
-
-    public void removeUserLike(int id) {
-        if (!userLikes.contains(id)) {
-            throw new UserLikeNotFoundException(this.id, id);
-        }
-        userLikes.remove(id);
-    }
-
     public void addGenre(Genre genre) {
         initGenres();
         if (genre.getId() <= 0) {
@@ -77,7 +59,13 @@ public class Film {
         genres.remove(genre);
     }
 
-    public int getCountLikes() {
-        return userLikes.size();
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("name", name);
+        values.put("description", description);
+        values.put("release_date", releaseDate);
+        values.put("duration", duration);
+        values.put("mpa_id", mpa.getId());
+        return values;
     }
 }

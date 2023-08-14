@@ -2,19 +2,17 @@ package ru.yandex.practicum.filmorate.storage.genre;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
-@Primary
 public class GenreDBStorage implements GenreStorage {
 
     @Autowired
@@ -31,10 +29,10 @@ public class GenreDBStorage implements GenreStorage {
     }
 
     @Override
-    public List<Genre> getAll() {
+    public Set<Genre> getAll() {
         String sqlQuery = "SELECT * FROM genre";
         SqlRowSet rows = jdbcTemplate.queryForRowSet(sqlQuery);
-        List<Genre> genres = new ArrayList<>();
+        Set<Genre> genres = new LinkedHashSet<>();
         while (rows.next()) {
             Genre genre = new Genre(rows.getInt("genre_id"));
             genres.add(genre);

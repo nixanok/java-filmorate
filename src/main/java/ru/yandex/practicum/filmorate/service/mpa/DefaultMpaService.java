@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +25,8 @@ public class DefaultMpaService implements MpaService {
     }
 
     @Override
-    public List<Mpa> getAll() {
-        List<Mpa> allMpa = mpaStorage.getAll();
+    public Set<Mpa> getAll() {
+        Set<Mpa> allMpa = mpaStorage.getAll();
         log.info("Getting allMpa. Size = {}", allMpa.size());
         return allMpa;
     }

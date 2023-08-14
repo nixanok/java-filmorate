@@ -7,7 +7,6 @@ public class Genre {
     private int id;
 
     public Genre() {
-
     }
 
     public Genre(int id) {

@@ -33,7 +33,7 @@ public final class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         log.debug("Request \"getUsers\"is called");
         return userService.getUsers();
     }
@@ -43,29 +43,4 @@ public final class UserController {
         log.debug("Request \"getUser\"is called");
         return userService.getUser(id);
     }
-
-    @PutMapping("/{id}/friends/{friendId}")
-    public void addFriends(@PathVariable int id, @PathVariable int friendId) {
-        log.debug("Request \"addFriends\"is called");
-        userService.addFriends(id, friendId);
-    }
-
-    @DeleteMapping("/{id}/friends/{friendId}")
-    public void removeFriends(@PathVariable int id, @PathVariable int friendId) {
-        log.debug("Request \"removeFriends\"is called");
-        userService.removeFriends(id, friendId);
-    }
-
-    @GetMapping("/{id}/friends")
-    public List<User> getFriends(@PathVariable int id) {
-        log.debug("Request \"getFriends\"is called");
-        return userService.getFriends(id);
-    }
-
-    @GetMapping("{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
-        log.debug("Request \"getCommonFriends\"is called");
-        return userService.getCommonFriends(id, otherId);
-    }
-
 }

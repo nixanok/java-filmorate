@@ -15,18 +15,16 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.film.FilmDBStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class FIlmDBStorageTest {
+public class FilmDBStorageTest {
     private final FilmDBStorage filmDBStorage;
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testCrateAndGetFilm() {
         Film film = Film
                 .builder()
@@ -42,7 +40,7 @@ public class FIlmDBStorageTest {
     }
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testUpdateFilm() {
         Film film = Film
                 .builder()
@@ -69,9 +67,9 @@ public class FIlmDBStorageTest {
     }
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testGetAllFilms() {
-        List<Film> films = new ArrayList<>();
+        Set<Film> films = new LinkedHashSet<>();
         Film film = Film
                 .builder()
                 .description("asd")
@@ -98,7 +96,7 @@ public class FIlmDBStorageTest {
     }
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testDeleteFilm() {
         Film film = Film
                 .builder()

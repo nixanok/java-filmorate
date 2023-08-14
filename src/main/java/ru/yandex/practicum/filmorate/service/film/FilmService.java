@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service.film;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
+import java.util.Set;
 
 public interface FilmService {
     Film createFilm(final Film film);
@@ -11,11 +12,7 @@ public interface FilmService {
 
     Film getFilm(int id);
 
-    List<Film> getFilms();
+    Set<Film> getAll();
 
     List<Film> getMostLikedFilms(int count);
-
-    void addLike(int filmId, int userId);
-
-    void removeLike(int filmId, int userId);
 }

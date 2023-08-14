@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.mpa.MpaService;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class MpaController {
     }
 
     @GetMapping
-    public List<Mpa> getAll() {
+    public Set<Mpa> getAll() {
         log.debug("Request \"getAllMpa\" is called.");
         return mpaService.getAll();
     }

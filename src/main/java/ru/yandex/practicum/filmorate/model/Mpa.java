@@ -7,7 +7,6 @@ public class Mpa {
     private int id;
 
     public Mpa() {
-
     }
 
     public Mpa(int id) {

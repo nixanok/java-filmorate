@@ -2,19 +2,17 @@ package ru.yandex.practicum.filmorate.storage.mpa;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.MpaNotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
-@Primary
 public class MpaDBStorage implements MpaStorage {
 
     @Autowired
@@ -31,10 +29,10 @@ public class MpaDBStorage implements MpaStorage {
     }
 
     @Override
-    public List<Mpa> getAll() {
+    public Set<Mpa> getAll() {
         String sqlQuery = "SELECT * FROM mpa";
         SqlRowSet rows = jdbcTemplate.queryForRowSet(sqlQuery);
-        List<Mpa> allMpa = new ArrayList<>();
+        Set<Mpa> allMpa = new LinkedHashSet<>();
         while (rows.next()) {
             Mpa mpa = new Mpa(rows.getInt("mpa_id"));
             allMpa.add(mpa);

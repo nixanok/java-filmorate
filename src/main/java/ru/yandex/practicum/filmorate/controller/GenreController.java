@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.genre.GenreService;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class GenreController {
     }
 
     @GetMapping
-    public List<Genre> getAllGenres() {
+    public Set<Genre> getAllGenres() {
         log.debug("Request \"getAllGenres\" is called.");
         return genreService.getAll();
     }

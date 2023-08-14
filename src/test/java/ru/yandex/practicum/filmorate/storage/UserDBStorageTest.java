@@ -14,8 +14,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserDBStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -24,7 +24,7 @@ public class UserDBStorageTest {
     private final UserDBStorage userStorage;
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testCrateAndGetUser() {
         User user = User
                 .builder()
@@ -38,7 +38,7 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testUpdateUser() {
         User user = User
                 .builder()
@@ -49,15 +49,14 @@ public class UserDBStorageTest {
                 .build();
         user = userStorage.add(user);
         user.setName("asd");
-        user.addFriend(1);
         userStorage.update(user);
         assertEquals(user, userStorage.get(1));
     }
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testGetAllUsers() {
-        List<User> users = new ArrayList<>();
+        Set<User> users = new LinkedHashSet<>();
         User user = User
                 .builder()
                 .email("myEmail@gmail.com")
@@ -80,7 +79,7 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/sql/schema.sql"})
+    @Sql({"/sql/schema.sql", "/sql/data.sql"})
     public void testDeleteUser() {
         User user = User
                 .builder()
