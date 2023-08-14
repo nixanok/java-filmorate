@@ -32,7 +32,7 @@ public class FriendDBStorage implements  FriendStorage {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT second_id FROM friends " +
                                                           "WHERE first_id = ?", id);
         Set<User> friends = new LinkedHashSet<>();
-        while(sqlRowSet.next()) {
+        while (sqlRowSet.next()) {
             int friendId = sqlRowSet.getInt("second_id");
             User friend = userStorage.get(friendId);
             friends.add(friend);
