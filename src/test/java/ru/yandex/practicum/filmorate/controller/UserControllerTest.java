@@ -25,7 +25,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 
 @SpringBootTest
-@Sql("/sql/schema.sql")
+@Sql("/schema.sql")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @AutoConfigureMockMvc
 public class UserControllerTest {
