@@ -20,11 +20,12 @@ import java.util.Set;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Sql({"/schema.sql", "/data.sql"})
 public class UserDBStorageTest {
+
     private final UserDBStorage userStorage;
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testCrateAndGetUser() {
         User user = User
                 .builder()
@@ -38,7 +39,6 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testUpdateUser() {
         User user = User
                 .builder()
@@ -54,7 +54,6 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testGetAllUsers() {
         Set<User> users = new LinkedHashSet<>();
         User user = User
@@ -79,7 +78,6 @@ public class UserDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testDeleteUser() {
         User user = User
                 .builder()

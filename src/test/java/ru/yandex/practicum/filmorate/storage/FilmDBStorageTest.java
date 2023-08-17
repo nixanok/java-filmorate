@@ -20,11 +20,11 @@ import java.util.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Sql({"/schema.sql", "/data.sql"})
 public class FilmDBStorageTest {
     private final FilmDBStorage filmDBStorage;
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testCrateAndGetFilm() {
         Film film = Film
                 .builder()
@@ -40,7 +40,6 @@ public class FilmDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testUpdateFilm() {
         Film film = Film
                 .builder()
@@ -67,7 +66,6 @@ public class FilmDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testGetAllFilms() {
         Set<Film> films = new LinkedHashSet<>();
         Film film = Film
@@ -96,7 +94,6 @@ public class FilmDBStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void testDeleteFilm() {
         Film film = Film
                 .builder()

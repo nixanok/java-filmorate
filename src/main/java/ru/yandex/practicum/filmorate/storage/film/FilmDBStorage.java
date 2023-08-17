@@ -78,26 +78,65 @@ public class FilmDBStorage implements FilmStorage {
     }
 
     @Override
+    public List<Film> getSortedByLikes(int count) {
+        String sqlQuery = "SELECT f.film_id, " +
+                "f.name, " +
+                "f.description, " +
+                "f.release_date, " +
+                "f.duration, " +
+                "f.mpa_id, " +
+                "fg.genre_id  " +
+                "FROM films AS f " +
+                "LEFT OUTER JOIN film_genre AS fg ON f.film_id=fg.film_id " +
+                "WHERE f.film_id IN (SELECT f.film_id " +
+                "FROM FILMS AS f " +
+                "LEFT OUTER JOIN users_likes_films AS ulf ON f.film_id=ulf.film_id " +
+                "GROUP BY f.film_id " +
+                "ORDER BY COUNT(ulf.film_id) DESC) " +
+                "LIMIT ?";
+        SqlRowSet sqlRowFilms = jdbcTemplate.queryForRowSet(sqlQuery, count);
+        return new ArrayList<>(extractFilmsFromRows(sqlRowFilms));
+    }
+
+    @Override
     public Set<Film> getAll() {
-        String sqlQuery = "SELECT * FROM films ORDER BY film_id";
+        String sqlQuery = "SELECT * FROM films AS f " +
+                          "LEFT OUTER JOIN film_genre AS fg ON f.film_id=fg.film_id " +
+                          "ORDER BY film_id";
         SqlRowSet filmsRows = jdbcTemplate.queryForRowSet(sqlQuery);
-        Set<Film> films = new LinkedHashSet<>();
+        return extractFilmsFromRows(filmsRows);
+    }
+
+    private HashSet<Film> extractFilmsFromRows(SqlRowSet filmsRows) {
+        HashMap<Integer, Film> films = new LinkedHashMap<>();
         while (filmsRows.next()) {
-            Film film = Film.builder()
-                    .id(filmsRows.getInt("film_id"))
-                    .name(filmsRows.getString("name"))
-                    .description(filmsRows.getString("description"))
-                    .releaseDate(Objects.requireNonNull(filmsRows.getDate("release_date")).toLocalDate())
-                    .duration(filmsRows.getInt("duration"))
-                    .mpa(new Mpa(filmsRows.getInt("mpa_id")))
-                    .build();
-            film.initGenres();
-            for (Genre genre : getGenres(film.getId())) {
-                film.addGenre(genre);
+            int id = filmsRows.getInt("film_id");
+            if (films.containsKey(id)) {
+                Film film = films.get(id);
+                extractGenre(filmsRows, film);
             }
-            films.add(film);
+            else {
+                Film film = Film.builder()
+                        .id(id)
+                        .name(filmsRows.getString("name"))
+                        .description(filmsRows.getString("description"))
+                        .releaseDate(Objects.requireNonNull(filmsRows.getDate("release_date")).toLocalDate())
+                        .duration(filmsRows.getInt("duration"))
+                        .mpa(new Mpa(filmsRows.getInt("mpa_id")))
+                        .build();
+                film.initGenres();
+                extractGenre(filmsRows, film);
+                films.put(id, film);
+            }
         }
-        return films;
+        return new HashSet<>(films.values());
+    }
+
+    private void extractGenre(SqlRowSet filmsRows, Film film) {
+        if (filmsRows.getString("genre_id") != null) {
+            int genre_id = Integer.parseInt(filmsRows.getString("genre_id"));
+            film.addGenre(new Genre(genre_id));
+        }
     }
 
     @Override

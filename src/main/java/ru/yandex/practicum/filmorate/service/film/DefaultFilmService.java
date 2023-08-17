@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,11 +52,7 @@ public final class DefaultFilmService implements FilmService {
 
     @Override
     public List<Film> getMostLikedFilms(int count) {
-        final List<Film> sortedFilms = filmStorage.getAll()
-                .stream()
-                .sorted((f1, f2) -> getLikesCount(f2) - getLikesCount(f1))
-                .limit(count)
-                .collect(Collectors.toList());
+        final List<Film> sortedFilms = filmStorage.getSortedByLikes(count);
         log.info("Getting sorted by likes films. Size = {}", sortedFilms.size());
         return sortedFilms;
     }
