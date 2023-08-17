@@ -133,8 +133,8 @@ public class FilmDBStorage implements FilmStorage {
 
     private void extractGenre(SqlRowSet filmsRows, Film film) {
         if (filmsRows.getString("genre_id") != null) {
-            int genre_id = Integer.parseInt(Objects.requireNonNull(filmsRows.getString("genre_id")));
-            film.addGenre(new Genre(genre_id));
+            int genreId = Integer.parseInt(Objects.requireNonNull(filmsRows.getString("genre_id")));
+            film.addGenre(new Genre(genreId));
         }
     }
 
