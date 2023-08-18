@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,13 +23,15 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 
 @SpringBootTest
+@Sql("/schema.sql")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @AutoConfigureMockMvc
 public class FilmControllerTest {
     @Autowired
-    private MockMvc mvc;
+    private final MockMvc mvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Test
     @DisplayName("Adding correct film.")
@@ -46,6 +50,8 @@ public class FilmControllerTest {
                 .releaseDate(LocalDate.of(2000, 1, 1))
                 .duration(123)
                 .build();
+
+
 
         pushFilmAndExpect4xxCode(film1);
         pushFilmAndExpect4xxCode(film2);

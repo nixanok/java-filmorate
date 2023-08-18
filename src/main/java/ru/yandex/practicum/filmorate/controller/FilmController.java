@@ -2,8 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
@@ -32,9 +34,9 @@ public final class FilmController {
     }
 
     @GetMapping
-    public List<Film> getFilms() {
+    public Set<Film> getFilms() {
         log.debug("Request \"getFilms\"is called");
-        return filmService.getFilms();
+        return filmService.getAll();
     }
 
     @GetMapping("/{id}")
@@ -48,17 +50,4 @@ public final class FilmController {
         log.debug("Request \"getMostPopularFilms\"is called");
         return filmService.getMostLikedFilms(count);
     }
-
-    @PutMapping("/{id}/like/{userId}")
-    public void addLike(@PathVariable int id, @PathVariable int userId) {
-        log.debug("Request \"addLike\"is called");
-        filmService.addLike(id, userId);
-    }
-
-    @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable int id, @PathVariable int userId) {
-        log.debug("Request \"deleteLike\"is called");
-        filmService.removeLike(id, userId);
-    }
-
 }

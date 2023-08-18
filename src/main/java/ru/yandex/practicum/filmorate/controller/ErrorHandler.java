@@ -1,12 +1,14 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.exception.*;
 
@@ -43,14 +45,21 @@ public final class ErrorHandler {
         return new ErrorResponse("BAD_REQUEST", 404, e.getMessage(), LocalDateTime.now().withNano(0));
     }
 
-    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class, UserLikeNotFoundException.class})
+    @ExceptionHandler({FilmNotFoundException.class,
+            UserNotFoundException.class,
+            UserLikeNotFoundException.class,
+            FriendsNotFoundException.class,
+            GenreNotFoundException.class,
+            MpaNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundError(final RuntimeException e) {
         log.warn(e.getMessage());
         return new ErrorResponse("NOT_FOUND", 404, e.getMessage(), LocalDateTime.now().withNano(0));
     }
 
-    @ExceptionHandler({FilmAlreadyExistException.class, UserAlreadyExistException.class})
+    @ExceptionHandler({FilmAlreadyExistException.class,
+            UserAlreadyExistException.class,
+            FriendsAlreadyExistException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleAlreadyExistError(final RuntimeException e) {
         log.warn(e.getMessage());

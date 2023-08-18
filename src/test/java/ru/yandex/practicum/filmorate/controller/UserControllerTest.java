@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,13 +25,15 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 
 @SpringBootTest
+@Sql("/schema.sql")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @AutoConfigureMockMvc
 public class UserControllerTest {
     @Autowired
-    private MockMvc mvc;
+    private final MockMvc mvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Test
     @DisplayName("Creating user with incorrect email.")
